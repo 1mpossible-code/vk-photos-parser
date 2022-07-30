@@ -76,6 +76,18 @@ def index():
         status = 'Online'
     elif process.poll == 0:
         status = 'Offline'
+    if not os.path.exists('./logs.log'):
+        with open('./logs.log', 'w') as file:
+            file.write('')
+    if not os.path.exists('./profiles.txt'):
+        with open('./profiles.txt', 'w') as file:
+            file.write('')
+    if not os.path.exists('./proceed.txt'):
+        with open('./proceed.txt', 'w') as file:
+            file.write('')
+    if not os.path.exists('./failed.txt'):
+        with open('./failed.txt', 'w') as file:
+            file.write('')
     with open('./profiles.txt', 'r') as profiles_file:
         profiles = ''
         for profile in profiles_file:
@@ -92,6 +104,7 @@ def index():
         logs_arr = []
         for log in logs:
             logs_arr.insert(0, log)
+        logs_arr = logs_arr[:200:]
 
     return render_template('index.html', logs_arr=logs_arr, profiles=profiles, status=status, failed=faileds, proceed=proceeds)
 

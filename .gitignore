@@ -4,3 +4,5 @@ profiles.txt
 .DS_Store
 photos
 logs.log
+proceed.txt
+failed.txt
