@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from dotenv import load_dotenv
 
@@ -50,7 +51,10 @@ def main():
                     failed.write(f'\n{profile_url.strip()}')
                 logger.error('Some error occurred while downloading photos')
                 os.chdir('../')
-                os.rmdir(f'./{profile_id}')
+                try:
+                    shutil.rmtree(f'./{profile_id}')
+                except OSError:
+                    logger.error(f'Cannot delete folder with id: {profile_id}')
 
         logger.info('The process for all profiles completed successfully')
 
