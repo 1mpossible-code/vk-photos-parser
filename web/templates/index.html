@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .logs {
+            border: 1px solid silver;
+            padding: 10px;
+        }
+
+        .log {
+            margin-bottom: 5px;
+        }
+        .profiles {
+            display: flex;
+
+        }
+    </style>
+</head>
+<body>
+<h1>Panel</h1>
+
+<h3>Script</h3>
+<p>Status: {{ status }}</p>
+<form action="/script-start" method="post">
+    <input type="submit" value="Start script">
+</form>
+<form action="/script-kill" method="post">
+    <input type="submit" value="Kill script">
+</form>
+
+<div class="profiles">
+    <form action="/profiles" method="POST">
+        <h3>Profiles</h3>
+        <textarea name="profiles" id="" cols="30" rows="10">{{ profiles }}</textarea>
+        <input type="submit" value="Upload profiles">
+    </form>
+
+    <form action="/proceed" method="POST">
+        <h3>Proceed profiles</h3>
+        <textarea name="proceed" id="" cols="30" rows="10">{{ proceed }}</textarea>
+        <input type="submit" value="Upload">
+    </form>
+
+    <form action="/failed" method="POST">
+        <h3>Failed profiles</h3>
+        <textarea name="failed" id="" cols="30" rows="10">{{ failed }}</textarea>
+        <input type="submit" value="Upload">
+    </form>
+</div>
+
+<form action="/clear-logs" method="POST">
+    <h3>Logs</h3>
+    <input type="submit" value="Clear logs">
+</form>
+<form action="/download-logs" method="POST">
+    <input type="submit" value="Download logs">
+</form>
+<div class="logs">
+    {% for log in logs_arr %}
+        <div class="log">{{ log }}</div>
+    {% endfor %}
+</div>
+
+<script>
+    setTimeout(() => location.reload(), 10000)
+</script>
+</body>
+</html>

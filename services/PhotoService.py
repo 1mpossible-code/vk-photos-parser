@@ -1,4 +1,3 @@
-from pprint import pprint
 from time import sleep
 
 import requests
@@ -16,7 +15,6 @@ def get_photos(profile_id: str, album_type: str, token: str):
     try:
         res = requests.get(f'https://api.vk.com/method/photos.getAll?owner_id={profile_id}&count=200&v=5.131',
                            {'access_token': token})
-        pprint(res.json())
 
         if 'error' in res.json():
             server_err_code = res.json()['error']['error_code']
