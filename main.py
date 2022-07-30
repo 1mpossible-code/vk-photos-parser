@@ -1,70 +1,50 @@
 import os
-from time import sleep
 
-import requests
 from dotenv import load_dotenv
+
+from logger import create_logger
+from services.PhotoService import download_photos, get_photos
+from utils import get_id_by_url
 
 load_dotenv()
 
 # Get token https://vkhost.github.io/
 token = os.getenv('TOKEN')
 
-path = 'photos'
-
-if not os.path.exists(path):
-    os.makedirs(path)
-
-os.chdir(path)
-
-with open('../profiles.txt', 'r') as profiles:
-    for profile_url in profiles:
-        url = profile_url.strip()
-        profile_short = url[15::]
-        res = requests.get(f'https://api.vk.com/method/users.get?user_ids={profile_short}&v=5.131',
-                           {'access_token': token})
-        if len(res.json()['response']) == 0:
-            print('Not existing profile', profile_url)
-            continue
-        profile_id = str(res.json()['response'][0]['id'])
-
-        if not os.path.exists(profile_id):
-            os.makedirs(profile_id)
-
-        os.chdir(profile_id)
-
-        print('Start processing', profile_id)
-
-        res = requests.get(f'https://api.vk.com/method/photos.get?album_id=profile&owner_id={profile_id}&v=5.131',
-                           {'access_token': token})
-        res2 = requests.get(f'https://api.vk.com/method/photos.get?album_id=wall&owner_id={profile_id}&v=5.131',
-                           {'access_token': token})
-
-        if 'error' in res.json():
-            print('Error:', res.json()['error']['error_code'], res.json()['error']['error_msg'])
-            continue
+logger = create_logger(__name__)
 
 
-        photos = res.json()['response']['items']
-        photos2 = res2.json()['response']['items']
+def create_and_jump_in_directory(directory: str):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    os.chdir(directory)
 
-        def download(photos):
-            for photo in photos:
-                photo_id = photo['id']
-                sizes = photo['sizes']
-                file_url = sizes[len(sizes) - 1]['url']
-                sleep(0.1)
-                try:
-                    print('Downloading', photo_id)
-                    r = requests.get(file_url)
-                    if r.status_code == 200:
-                        with open(f'{photo_id}.jpg', 'wb') as output_file:
-                            output_file.write(r.content)
 
-                except OSError:
-                    print(photo_id)
-        download(photos)
-        download(photos2)
+def init_photos_directory(photos_dir):
+    create_and_jump_in_directory(photos_dir)
 
-        print(f'Success in downloading album of {profile_id}')
-        os.chdir('../')
-    print('Everything downloaded successfully')
+
+def main():
+    with open('../profiles.txt', 'r') as profiles:
+        for profile_url in profiles:
+            profile_id = get_id_by_url(profile_url, token)
+
+            logger.info(f'Start processing {profile_id}')
+
+            create_and_jump_in_directory(str(profile_id))
+
+            photos_urls = get_photos(profile_id, 'profile', token)
+
+            try:
+                download_photos(photos_urls)
+            except Exception:
+                logger.error('Some error occurred while downloading photos')
+
+            logger.info(f'Success in downloading album of user with id: {profile_id}')
+            os.chdir('../')
+        logger.info('The process for all profiles completed successfully')
+
+
+if __name__ == '__main__':
+    init_photos_directory('photos')
+    main()
