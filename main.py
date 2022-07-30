@@ -36,18 +36,22 @@ def main():
             photos_urls = get_photos(profile_id, 'profile', token)
 
             try:
+                if len(photos_urls) == 0:
+                    logger.warning(f'Profile {profile_id} does not have photos')
+                    raise Exception('No photos')
                 download_photos(photos_urls)
                 with open('../../proceed.txt', 'a') as proceed:
-                    proceed.write(f'{profile_url}')
+                    proceed.write(f'\n{profile_url.strip()}')
 
                 logger.info(f'Success in downloading album of user with id: {profile_id}')
+                os.chdir('../')
             except Exception:
                 with open('../../failed.txt', 'a') as failed:
-                    failed.write(f'{profile_url}')
+                    failed.write(f'\n{profile_url.strip()}')
                 logger.error('Some error occurred while downloading photos')
+                os.chdir('../')
+                os.rmdir(f'./{profile_id}')
 
-
-            os.chdir('../')
         logger.info('The process for all profiles completed successfully')
 
 

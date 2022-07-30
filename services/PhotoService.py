@@ -22,8 +22,8 @@ def get_photos(profile_id: str, album_type: str, token: str):
             err_msg = f'Error {server_err_code}: {server_err_msg}'
             logger.error(err_msg)
 
-        if len(res.json()['response']) == 0:
-            err_msg = f'Profile does not have photos, or request is bad'
+        if len(res.json()['response']['count']) == 0:
+            err_msg = f'Profile does not have photos'
             logger.error(err_msg)
             return []
         return res.json()['response']['items']
