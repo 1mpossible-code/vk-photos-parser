@@ -15,6 +15,7 @@
         .log {
             margin-bottom: 5px;
         }
+
         .profiles {
             display: flex;
 
@@ -23,6 +24,10 @@
 </head>
 <body>
 <h1>Panel</h1>
+
+<button id="start">Start autoupdate</button>
+<button id="stop">Stop autoupdate</button>
+<p id="text">Autoupdate: on</p>
 
 <h3>Script</h3>
 <p>Status: {{ status }}</p>
@@ -67,7 +72,20 @@
 </div>
 
 <script>
-    setTimeout(() => location.reload(), 10000)
+    const start = document.getElementById('start')
+    const stop = document.getElementById('stop')
+    const text = document.getElementById('text')
+    const timer = setTimeout(() => {
+        location.reload()
+    }, 5000)
+    start.addEventListener('click', () => {
+        text.innerText = 'Autoupdate: on'
+        location.reload()
+    })
+    stop.addEventListener('click', () => {
+        text.innerText = 'Autoupdate: off'
+        clearTimeout(timer)
+    })
 </script>
 </body>
 </html>
