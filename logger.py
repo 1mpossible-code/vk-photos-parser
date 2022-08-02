@@ -1,4 +1,9 @@
 import logging
+import os
+
+from services.PathService import get_app_path
+
+os.chdir(get_app_path())
 
 
 def create_logger(name):

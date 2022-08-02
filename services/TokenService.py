@@ -2,8 +2,9 @@ import os
 import urllib
 
 import requests
-from logger import create_logger
 from dotenv import load_dotenv
+
+from logger import create_logger
 
 load_dotenv()
 

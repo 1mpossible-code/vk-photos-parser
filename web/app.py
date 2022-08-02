@@ -4,9 +4,10 @@ from time import sleep
 
 from flask import Flask, request, render_template, redirect, send_file
 
+from services.PathService import get_app_path
 from services.TokenService import make_new_token
 
-os.chdir('../')
+os.chdir(get_app_path())
 
 app = Flask(__name__)
 
@@ -23,6 +24,7 @@ def set_process(pro):
 @app.route("/token", methods=['POST'])
 def token():
     make_new_token()
+    sleep(1)
     return redirect('/')
 
 
