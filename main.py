@@ -4,13 +4,23 @@ import shutil
 from dotenv import load_dotenv
 
 from logger import create_logger
+from services.TokenService import make_new_token
 from services.PhotoService import download_photos, get_photos
 from utils import get_id_by_url
 
 load_dotenv()
 
-# Get token https://vkhost.github.io/
-token = os.getenv('TOKEN')
+if not os.path.exists('./token.txt'):
+    make_new_token()
+
+with open('./token.txt', 'r') as token_file:
+    token = token_file.read()
+
+if not token:
+    make_new_token()
+
+with open('./token.txt', 'r') as token_file:
+    token = token_file.read()
 
 logger = create_logger(__name__)
 

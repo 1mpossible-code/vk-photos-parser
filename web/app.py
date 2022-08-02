@@ -4,6 +4,8 @@ from time import sleep
 
 from flask import Flask, request, render_template, redirect, send_file
 
+from services.TokenService import make_new_token
+
 os.chdir('../')
 
 app = Flask(__name__)
@@ -13,15 +15,21 @@ global process
 process = None
 
 
-def setProcess(pro):
+def set_process(pro):
     global process
     process = pro
+
+
+@app.route("/token", methods=['POST'])
+def token():
+    make_new_token()
+    return redirect('/')
 
 
 @app.route("/script-start", methods=['POST'])
 def script_start():
     pro = subprocess.Popen(['python3', './main.py'])
-    setProcess(pro)
+    set_process(pro)
     return redirect('/')
 
 
@@ -106,7 +114,8 @@ def index():
             logs_arr.insert(0, log)
         logs_arr = logs_arr[:200:]
 
-    return render_template('index.html', logs_arr=logs_arr, profiles=profiles, status=status, failed=faileds, proceed=proceeds)
+    return render_template('index.html', logs_arr=logs_arr, profiles=profiles, status=status, failed=faileds,
+                           proceed=proceeds)
 
 
 if __name__ == '__main__':
