@@ -1,9 +1,10 @@
 .idea
 .env
-profiles.txt
+temp/profiles.txt
 .DS_Store
 photos
-logs.log
-proceed.txt
-failed.txt
-token.txt
+temp/logs.log
+temp/proceed.txt
+temp/failed.txt
+temp/token.txt
+venv

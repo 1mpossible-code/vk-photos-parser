@@ -4,10 +4,7 @@ from time import sleep
 
 from flask import Flask, request, render_template, redirect, send_file
 
-from services.PathService import get_app_path
-from services.TokenService import make_new_token
-
-os.chdir(get_app_path())
+from app.services.TokenService import make_new_token
 
 app = Flask(__name__)
 
@@ -118,7 +115,3 @@ def index():
 
     return render_template('index.html', logs_arr=logs_arr, profiles=profiles, status=status, failed=faileds,
                            proceed=proceeds)
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)

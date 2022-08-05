@@ -1,18 +1,13 @@
 import logging
-import os
-
-from services.PathService import get_app_path
-
-os.chdir(get_app_path())
 
 
-def create_logger(name):
+def get_logger(name):
     # Create a custom logger
     local_logger = logging.getLogger(name)
 
     # Create handlers
     c_handler = logging.StreamHandler()
-    f_handler = logging.FileHandler('logs.log')
+    f_handler = logging.FileHandler('./temp/logs.log')
 
     # Create formatters and add it to handlers
     c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
